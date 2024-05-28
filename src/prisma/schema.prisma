@@ -1,0 +1,52 @@
+datasource db {
+     provider = "mysql" 
+     url      = env("DATABASE_URL")
+}
+generator client {
+  provider = "prisma-client-js"
+  }
+  
+model user {
+  id    Int     @id @default(autoincrement())
+  role_id Int  
+  fname  String
+  lname String
+  email String
+  dob DateTime?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model role{
+  id Int @id @default(autoincrement())
+  role String @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Cource{
+  id Int @id @default(autoincrement())
+  name String @unique
+  desciption String 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model student_details{
+  std_id Int @id 
+  class Int 
+  grno String
+  p_contact String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model teacher_details{
+  id Int @id 
+  class Int 
+  contact String
+  salary Int
+  joining_date DateTime 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
