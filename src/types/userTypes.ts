@@ -1,0 +1,57 @@
+export type userResult = {
+  id?: number;
+  roleId?: number;
+  fname?: String;
+  lname?: String | null;
+  email?: String | null;
+  dob?: Date | null;
+  class?: number;
+  grno?: String;
+  contact?: String;
+  salary?: number;
+  joiningDate?: Date;
+  addr?: String;
+  activationCode?: String;
+  isActive?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  isDelete?: boolean;
+  password?: String;
+};
+
+export type userselect = {
+  id?: boolean;
+  roleId?: boolean;
+  fname?: boolean;
+  lname?: boolean;
+  email?: boolean;
+  dob?: boolean;
+  class?: boolean;
+  grno?: boolean;
+  contact?: boolean;
+  salary?: boolean;
+  joiningDate?: boolean;
+  addr?: boolean;
+  createdAt?: boolean;
+  updatedAt?: boolean;
+  isDelete?: boolean;
+  activationCode?: boolean;
+  isActive?: boolean;
+  password?: boolean;
+};
+export type userinsert = {
+  id?: number;
+  roleId: number;
+  fname: String;
+  lname: String;
+  email: String;
+  dob: Date;
+  class: number;
+  grno?: String;
+  contact: String;
+  salary?: number;
+  joiningDate: Date;
+  addr?: String;
+  activationCode: String;
+  isActive?: boolean;
+};

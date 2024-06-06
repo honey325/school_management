@@ -13,17 +13,41 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
-        const alice = yield prisma.role.createMany({
+        const data1 = yield prisma.role.createMany({
+            data: [{ role: "student" }, { role: "teacher" }, { role: "admin" }],
+            skipDuplicates: true,
+        });
+        console.log(data1);
+        const data2 = yield prisma.subjects.createMany({
             data: [
                 {
-                    role: "student",
+                    name: "subject1",
+                    class: 1,
+                    description: "aaaaaaaaaaaaaaaaaaaaaaaa",
                 },
-                { role: "teacher" },
-                { role: "admin" },
             ],
             skipDuplicates: true,
         });
-        console.log(alice);
+        console.log(data2);
+        const data3 = yield prisma.users.upsert({
+            where: { email: "admin@gmail.com" },
+            update: {},
+            create: {
+                roleId: 3,
+                class: 4,
+                fname: "honey",
+                lname: "andharia",
+                grno: "df524dsf",
+                dob: new Date("2002-11-25"),
+                addr: "dgggggggggggg",
+                email: "admin@gmail.com",
+                contact: "1234567892",
+                joiningDate: new Date("2024-12-12"),
+                activationCode: "bahskdbveoifrjhwefw",
+                isActive: true,
+            },
+        });
+        console.log(data3);
     });
 }
 main();

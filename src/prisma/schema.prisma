@@ -1,52 +1,140 @@
 datasource db {
-     provider = "mysql" 
-     url      = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
+
 generator client {
-  provider = "prisma-client-js"
-  }
-  
-model user {
-  id    Int     @id @default(autoincrement())
-  role_id Int  
-  fname  String
-  lname String
-  email String
-  dob DateTime?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
-model role{
-  id Int @id @default(autoincrement())
-  role String @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+model users {
+  id                Int                 @id @default(autoincrement())
+  roleId            Int
+  fname             String
+  lname             String
+  email             String              @unique
+  dob               DateTime
+  class             Int
+  grno              String?             @unique
+  contact           String
+  salary            Int?
+  joiningDate       DateTime
+  addr              String?
+  password          String?
+  activationCode    String
+  isActive          Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  isDelete          Boolean             @default(false)
+  subTeacher        subTeacher[]
+  attendance        attendance[]
+  result            result[]
+  event             event[]
+  eventParticipents eventParticipents[]
 }
 
-model Cource{
-  id Int @id @default(autoincrement())
-  name String @unique
-  desciption String 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+model role {
+  id        Int      @id @default(autoincrement())
+  role      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDelete  Boolean  @default(false)
 }
 
-model student_details{
-  std_id Int @id 
-  class Int 
-  grno String
-  p_contact String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+model subjects {
+  id          Int          @id @default(autoincrement())
+  class       Int
+  name        String
+  description String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  isDelete    Boolean      @default(false)
+  subTeacher  subTeacher[]
+  result      result[]
+
+  @@unique([class, name])
 }
 
-model teacher_details{
-  id Int @id 
-  class Int 
-  contact String
-  salary Int
-  joining_date DateTime 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+model subTeacher {
+  subjects  subjects @relation(fields: [subId], references: [id])
+  subId     Int
+  users     users    @relation(fields: [teacherId], references: [id])
+  teacherId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDelete  Boolean  @default(false)
+
+  @@id([subId, teacherId])
+}
+
+model attendance {
+  id        Int      @id @default(autoincrement())
+  student   users    @relation(fields: [stdId], references: [id])
+  stdId     Int
+  attDate   DateTime
+  present   Boolean
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDelete  Boolean  @default(false)
+
+  @@unique([stdId, attDate])
+}
+
+model exams {
+  id         Int          @id @default(autoincrement())
+  examName   String
+  examDate   DateTime
+  totalMarks Int
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  isDelete   Boolean      @default(false)
+  resultExam resultExam[]
+}
+
+model result {
+  id            Int          @id
+  student       users        @relation(fields: [stdId], references: [id])
+  stdId         Int
+  subjects      subjects     @relation(fields: [subId], references: [id])
+  subId         Int
+  examdate      DateTime
+  obtainedMarks Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  isDelete      Boolean      @default(false)
+  resultExam    resultExam[]
+
+  @@unique([stdId, subId])
+}
+
+model resultExam {
+  exams    exams  @relation(fields: [examId], references: [id])
+  examId   Int
+  result   result @relation(fields: [resultId], references: [id])
+  resultId Int
+
+  @@id([examId, resultId])
+}
+
+model event {
+  id                Int                 @id
+  name              String
+  user              users               @relation(fields: [coordinator], references: [id])
+  coordinator       Int
+  createdAt         DateTime
+  updatedAt         DateTime            @updatedAt
+  deletedAt         DateTime
+  isDelete          Boolean
+  eventParticipents eventParticipents[]
+}
+
+model eventParticipents {
+  user      users   @relation(fields: [studentID], references: [id])
+  studentID Int
+  event     event   @relation(fields: [eventId], references: [id])
+  eventId   Int
+  isWinner  Boolean @default(false)
+
+  @@id([studentID, eventId])
 }
